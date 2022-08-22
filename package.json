@@ -1,0 +1,26 @@
+{
+  "name": "satn-aws-wrapper",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abecms/satn-aws-wrapper.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/abecms/satn-aws-wrapper/issues"
+  },
+  "homepage": "https://github.com/abecms/satn-aws-wrapper#readme",
+  "dependencies": {
+    "@shopify/shopify-api": "^5.0.1",
+    "aws-sdk": "^2.1198.0",
+    "dotenv": "^16.0.1",
+    "lodash": "^4.17.21"
+  }
+}
