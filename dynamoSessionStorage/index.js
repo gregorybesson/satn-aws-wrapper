@@ -85,6 +85,10 @@ async function deleteSessionsCallback(shop) {
 
 async function findSessionsByShopCallback(shop) {
   //const cleanShop = sanitizeShop(shop, true)!;
+  if (Array.isArray(shop)) {
+    shop = shop[0];
+  }
+  shop = shop.replace('offline_', '')
   let sessions = [];
 
   const params = {
