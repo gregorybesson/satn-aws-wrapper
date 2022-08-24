@@ -68,7 +68,6 @@ async function loadCallback(id) {
 
 async function deleteCallback(id) {
   const shop = id.replace('offline_', '')
-  console.log('deleteCallback called', id);
   const sk = `session#id#${id}`;
   const key = { store: shop, sk: sk };
   const result = await db.removeItem(key);
