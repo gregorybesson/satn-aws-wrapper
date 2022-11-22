@@ -163,6 +163,31 @@ export const query = async (params) => {
   }
 };
 
+/**
+ * return all the stores in the database
+ * @returns []
+ */
+ export const getStores = async () => {
+  var params = {
+    TableName: DATABASE,
+    FilterExpression : "contains(#sk, :sk)",
+    ExpressionAttributeNames: { "#sk": "sk" },
+    ExpressionAttributeValues: {
+        ':sk':"session#id#offline_"
+    }
+  };
+
+  try {
+    const data = await docClient.scan(params).promise();
+    const stores = _.uniq(data.Items.map((item) => item.store));
+    return stores;
+  } catch (err) {
+    console.log("Failure", err.message);
+
+    return [];
+  }
+};
+
 export const scan = async (searchQuery) => {
   var params = {
     TableName: process.env.PRODUCTS_TABLE,
