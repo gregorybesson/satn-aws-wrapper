@@ -21,6 +21,7 @@
     "@shopify/shopify-api": "^5.0.1",
     "aws-sdk": "^2.1198.0",
     "dotenv": "^16.0.1",
-    "lodash": "^4.17.21"
+    "lodash": "^4.17.21",
+    "nodemailer": "^6.8.0"
   }
 }
