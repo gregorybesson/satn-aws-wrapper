@@ -5,16 +5,28 @@ import * as db from "../dynamo/index.js";
 import { Shopify } from "@shopify/shopify-api";
 
 async function storeCallback(session) {
-  //console.log('storeCallback called', session);
+  console.log('storeCallback called', session);
 
   const payload = { ...session }
-  payload.expires = '' + session.expires
+  if (payload.expires === undefined) {
+    delete payload.expires
+  } else {
+    payload.expires = session.expires?.toISOString()
+  }
+
+  if (typeof payload.onlineAccessInfo === undefined) {
+    delete payload.onlineAccessInfo
+  }
+
+  console.log('storeCallback payload', payload);
+
   //delete payload.id
+
   const sk = `session#id#${session.id}`;
 
   try {
     let record = await db.addItem({
-      store: payload.shop,
+      store: String(payload.shop),
       sk: sk,
       session: payload
     });
@@ -39,10 +51,14 @@ async function storeCallback(session) {
 }
 
 async function loadCallback(id) {
-  const shop = id.replace('offline_', '')
+  let shop = id.replace('offline_', '')
+  shop = shop.slice(0, shop.lastIndexOf('_'));
   const sk = `session#id#${id}`;
   const key = { store: shop, sk: sk };
   const item = await db.getItem(key);
+
+  console.log('loadCallback key', key);
+  console.log('loadCallback item', item);
 
   if (!_.isEmpty(item) && _.get(item, "Item.session")) {
     const session = new Session(id)
@@ -53,12 +69,12 @@ async function loadCallback(id) {
     session.expires = expires ? new Date(expires) : undefined
     session.isOnline = isOnline
     session.accessToken = accessToken
-    session.onlineAccessInfo = onlineAccessInfo
+    session.onlineAccessInfo = onlineAccessInfo ? onlineAccessInfo : undefined
     session.isActive = () => {
-      return true;
-      // return session.accessToken &&
-      //   session.expires ? session.expires > new Date() : true;
+      return session.accessToken && (session.expires ? session.expires > new Date() : true);
     };
+
+    console.log('loadCallback session', session);
 
     return session
   }
@@ -102,8 +118,9 @@ async function findSessionsByShopCallback(shop) {
       ":session": "session#id#",
     },
   };
+  console.log('params', params);
   const result = await db.query(params);
-
+  console.log('result', result);
   for (const item of result.Items) {
     if (_.get(item, "session.shop") === shop) {
 
