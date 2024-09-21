@@ -52,7 +52,8 @@ async function storeCallback(session) {
 
 async function loadCallback(id) {
   let shop = id.replace('offline_', '')
-  shop = shop.slice(0, shop.lastIndexOf('_'));
+  const underscoreIndex = shop.lastIndexOf('_');
+  shop = underscoreIndex !== -1 ? shop.slice(0, underscoreIndex) : shop;
   const sk = `session#id#${id}`;
   const key = { store: shop, sk: sk };
   const item = await db.getItem(key);
